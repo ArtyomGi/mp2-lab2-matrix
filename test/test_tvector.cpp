@@ -31,7 +31,12 @@ TEST(TVector, can_create_copied_vector)
 
 TEST(TVector, copied_vector_is_equal_to_source_one)
 {
-  ADD_FAILURE();
+	TVector<int> v1(15, 2);
+	v1[5] = 120;
+	v1[3] = -36;
+	v1[12] = 54;
+	TVector<int> v2(v1);
+	EXPECT_EQ(v1, v2);
 }
 
 TEST(TVector, copied_vector_has_its_own_memory)
@@ -63,12 +68,15 @@ TEST(TVector, can_set_and_get_element)
 
 TEST(TVector, throws_when_set_element_with_negative_index)
 {
-  ADD_FAILURE();
+	TVector<int> v(5, 1);
+	
+	ASSERT_ANY_THROW(v[-1] = 10);
 }
 
 TEST(TVector, throws_when_set_element_with_too_large_index)
 {
-  ADD_FAILURE();
+	TVector<int> v(5, 1);
+	ASSERT_ANY_THROW(v[MAX_VECTOR_SIZE + 1] = 10);
 }
 
 TEST(TVector, can_assign_vector_to_itself)
