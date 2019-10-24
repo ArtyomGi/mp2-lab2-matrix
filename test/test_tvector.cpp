@@ -133,8 +133,9 @@ TEST(TVector, compare_equal_vectors_return_true)
 	
 	for (int i = 2; i < size; i++)
 		v1[i] = v2[i] = i;
+	cout << v1 << "   " << v2 << endl;
 
-	EXPECT_EQ(v1, v2);
+	EXPECT_TRUE(v1 == v2);
 }
 
 TEST(TVector, compare_vector_with_itself_return_true)
