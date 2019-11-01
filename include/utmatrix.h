@@ -27,8 +27,8 @@ public:
   TVector(int s = 10, int si = 0);
   TVector(const TVector &v);                // конструктор копирования
   ~TVector();
-  int GetSize()      { return Size;       } // размер вектора
-  int GetStartIndex(){ return StartIndex; } // индекс первого элемента
+  int GetSize() const { return Size;       } // размер вектора
+  int GetStartIndex() const { return StartIndex; } // индекс первого элемента
   ValType& operator[](int pos);             // доступ
   ValType operator[](int pos) const;        // константный доступ
   bool operator==(const TVector &v) const;  // сравнение
@@ -56,8 +56,10 @@ public:
   }
   friend ostream& operator<<(ostream &out, const TVector &v)
   {
-    for (int i = 0; i < v.Size - v.StartIndex; i++)
-      out << v.pVector[i] << ' ';
+	  for (int i = 0; i < v.GetStartIndex(); i++)
+		  out << 0 << ' ';
+	  for (int i = v.GetStartIndex(); i < v.GetSize(); i++)
+		  out << v[i] << ' ';
     return out;
   }
 };
@@ -98,7 +100,7 @@ TVector<ValType>::~TVector()
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // доступ
-ValType& TVector<ValType>::operator[](int pos) // pos откуда?
+ValType& TVector<ValType>::operator[](int pos)
 {
 	//if (pos < 0) throw "Position should be positive";
 	if (pos >= Size) throw "Position should be lower than size of vector";
@@ -115,21 +117,21 @@ ValType TVector<ValType>::operator[](int pos) const        // константн
 }
 
 template <class ValType> // сравнение
-bool TVector<ValType>::operator==(const TVector &v) const //Доделать
+bool TVector<ValType>::operator==(const TVector &v) const
 {
 	if (this == &v) return 1;
 	if (Size != v.Size) return 0;
 	if (StartIndex < v.StartIndex) // в v больше нулей, чем в this
 	{
 		for (int i = 0; i < v.StartIndex - StartIndex; i++)
-			if (pVector[i]) return 0;
+			if (pVector[i]!=0) return 0;
 		for (int i = 0, j = v.StartIndex - StartIndex; i < Size - v.StartIndex; i++, j++) // i для v, j для this
 			if (pVector[j] != v.pVector[i]) return 0;
 	}
 	else if (StartIndex > v.StartIndex) // в this больше нулей, чем в v
 	{
 		for (int i = 0; i < StartIndex - v.StartIndex; i++)
-			if (v.pVector[i]) return 0;
+			if (v.pVector[i]!=0) return 0;
 		for (int i = 0, j = StartIndex - v.StartIndex; i < Size - StartIndex; i++, j++) // j для v, i для this
 			if (pVector[i] != v.pVector[j]) return 0;
 	}
@@ -216,7 +218,7 @@ TVector<ValType> TVector<ValType>::operator+(const TVector<ValType> &v)
 		for (int i = StartIndex - v.StartIndex, j = 0; i < Size - v.StartIndex; i++, j++) // i для v, j для this
 			Temp.pVector[i] = pVector[j] + v.pVector[i];*/
 		for (int i = v.StartIndex; i < StartIndex; i++)
-			Temp[i] = v[i]; // v[i] не работает
+			Temp[i] = v[i];
 		for (int i = StartIndex; i < Size; i++)
 			Temp[i] = (*this)[i] + v[i];
 	}
